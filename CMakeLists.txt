@@ -1,18 +1,22 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.13)
 project(depthComp)
 
-IF ( UNIX )
-   set( CMAKE_PREFIX_PATH "/opt/opencv" )
-   set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
-   MESSAGE( "Using - UNIX/LINUX CONFIG" )
-ENDIF ( UNIX )
+#TODO: make this detect version/minor version
+FIND_PACKAGE(Boost COMPONENTS python35 REQUIRED)
+FIND_PACKAGE(PythonInterp 3 REQUIRED)
+FIND_PACKAGE(PythonLibs 3 REQUIRED)
 
 find_package(OpenCV REQUIRED)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-set(SOURCE_FILES main.cpp depthComp.cpp)
+include_directories(${Boost_INCLUDE_DIRS} ${PYTHON_INCLUDE_DIRS} submod/pyboostcvconverter/include/)
 
-add_executable(depthComp main.cpp depthComp.cpp)
+add_library(depthComp SHARED
+    depthComp.cpp
+    depthCompPy.cpp
+    submod/pyboostcvconverter/src/pyboost_cv4_converter.cpp
+    submod/pyboostcvconverter/src/pyboost_cv2_converter.cpp
+    submod/pyboostcvconverter/src/pyboost_cv3_converter.cpp)
 
-target_link_libraries (depthComp ${OpenCV_LIBS})
+target_link_libraries (depthComp ${OpenCV_LIBS} ${Boost_LIBRARIES} ${PYTHON_LIBRARIES})

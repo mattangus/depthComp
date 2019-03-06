@@ -1,0 +1,6 @@
+[submodule "submod/conversion"]
+	path = submod/conversion
+	url = git@github.com:yati-sagade/opencv-ndarray-conversion.git
+[submodule "submod/pyboostcvconverter"]
+	path = submod/pyboostcvconverter
+	url = git@github.com:Algomorph/pyboostcvconverter.git
